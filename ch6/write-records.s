@@ -1,5 +1,7 @@
-.include "linux.s"
-.include "record-def.s"
+# as -g -o build/write-record.o ch6/write-record.s && as -g -o build/write-records.o ch6/write-records.s && ld -o build/write-records build/write-records.o build/write-record.o && ./build/write-records
+
+.include "ch6/linux.s"
+.include "ch6/record-def.s"
 
 .section .data
 

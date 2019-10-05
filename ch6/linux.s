@@ -12,4 +12,3 @@
 
 # common status codes
 .equ END_OF_FILE, 0
-
