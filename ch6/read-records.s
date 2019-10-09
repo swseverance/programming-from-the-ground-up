@@ -1,4 +1,4 @@
-# as -g -o build/read-record.o ch6/read-record.s && as -g -o build/read-records.o ch6/read-records.s as -g -o build/count-chars.o ch6/count-chars.s && ld -o build/read-records build/read-records.o build/read-record.o build/count-chars.o && ./build/read-records
+# as -g -o build/read-record.o ch6/read-record.s && as -g -o build/read-records.o ch6/read-records.s && as -g -o build/count-chars.o ch6/count-chars.s && ld -o build/read-records build/read-records.o build/read-record.o build/count-chars.o && ./build/read-records
 
 .include "ch6/linux.s"
 .include "ch6/record-def.s"
@@ -7,6 +7,9 @@
 
 filename:
     .ascii "ch6/test.dat\0"
+
+newline:
+    .ascii "\n\0"
 
 .section .bss
 
@@ -51,6 +54,13 @@ record_read_loop:
     mov OUTPUT_DESCRIPTOR(%rbp), %rdi
     mov $SYS_WRITE, %rax
     syscall
+
+    mov $1, %rdx                      # count of chars to print
+    mov $newline, %rsi
+    mov OUTPUT_DESCRIPTOR(%rbp), %rdi
+    mov $SYS_WRITE, %rax
+    syscall
+
     jmp record_read_loop
 
 finished_reading:
