@@ -3,16 +3,15 @@
 .section .data
 
 helloworld:
-    .ascii "hello world\n"
+    .ascii "hello world\n\0"
 
 .section .text
 
-.global _start
-
+.globl _start
+    
 _start:
-    push $helloworld
-    call printf
-
-    push $0
-    call exit
-
+    movq $helloworld, %rdi
+    call  printf
+    
+    movq $0, %rdi
+    call  exit
