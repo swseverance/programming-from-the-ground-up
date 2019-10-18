@@ -62,10 +62,17 @@ alloc_loop_begin:
     jle allocate_here
 
 next_location:
-    ...
+    add $HEADER_SIZE, %rax
+    add %rdx, %rax
+    jmp alloc_loop_begin
 
 allocate_here:
-    ...
+    movq $UNAVAILABLE, HDR_AVAIL_OFFSET(%rax)
+    add $HEADER_SIZE, %rax
+
+    mov %rbp, %rsp
+    pop %rbp
+    ret
 
 move_break:
     add $HEADER_SIZE, %rbx # rbx = current_break
@@ -85,7 +92,7 @@ move_break:
     pop %rbx
     pop %rax
 
-    mov $UNAVAILABLE, HDR_AVAIL_OFFSET(%rax)
+    movq $UNAVAILABLE, HDR_AVAIL_OFFSET(%rax)
     mov %rcx, HDR_SIZE_OFFSET(%rax)
     add $HEADER_SIZE, %rax # move rax to the start of usable memory. rax now holds the return value
     mov %rbx, current_break
@@ -104,4 +111,7 @@ error:
 .type deallocate, @function
 .equ ST_MEMORY_SEG, 8
 deallocate:
-    ...
+    mov ST_MEMORY_SEG(%rsp), %rax
+    sub $HEADER_SIZE, %rax
+    movq $AVAILABLE, HDR_AVAIL_OFFSET(%rax)
+    ret
